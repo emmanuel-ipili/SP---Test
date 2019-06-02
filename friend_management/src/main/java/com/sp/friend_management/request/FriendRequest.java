@@ -7,4 +7,5 @@ import lombok.Data;
 @Data
 public class FriendRequest {
 	private List<String> friends;
+	private String email;
 }
