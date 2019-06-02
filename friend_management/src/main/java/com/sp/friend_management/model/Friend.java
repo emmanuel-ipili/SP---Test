@@ -2,6 +2,7 @@ package com.sp.friend_management.model;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -14,7 +15,8 @@ import lombok.Data;
 @Entity
 public class Friend {
 
-	private @Id String friendId;
+	private @Id @GeneratedValue Long id;
+	private String friendId;
 	
 	@JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

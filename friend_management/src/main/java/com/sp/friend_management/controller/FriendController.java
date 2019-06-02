@@ -74,4 +74,40 @@ public class FriendController {
 	    
 		return response;
 	  }
+	  
+	@PostMapping("/commonfriendlist")
+	public FriendListResponse getCommonFriends(@RequestBody FriendRequest request) {
+		List<String> friends = request.getFriends();
+		if (friends.size() != 2) {
+			throw new FriendRequestException(friends.size());
+		}
+
+		if (friends.get(0).equalsIgnoreCase(friends.get(1))) {
+			throw new FriendRequestException(friends.get(0));
+		}
+
+		UserAccount userAccount1 = repository.findById(friends.get(0))
+				.orElseThrow(() -> new UserAccountNotFoundException(friends.get(0)));
+
+		UserAccount userAccount2 = repository.findById(friends.get(1))
+				.orElseThrow(() -> new UserAccountNotFoundException(friends.get(1)));
+
+		FriendListResponse response = new FriendListResponse(true);
+		List<String> userAccount1Friends = new ArrayList<String>();
+		for (Friend friend : userAccount1.getFriends()) {
+			userAccount1Friends.add(friend.getFriendId());
+		}
+
+		List<String> commonFriends = new ArrayList<String>();
+		for (Friend friend : userAccount2.getFriends()) {
+			if (userAccount1Friends.contains(friend.getFriendId())) {
+				commonFriends.add(friend.getFriendId());
+			}
+		}		
+		
+		response.setFriends(commonFriends);
+		response.setCount(commonFriends.size());
+
+		return response;
+	}
 }
