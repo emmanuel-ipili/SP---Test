@@ -1,5 +1,6 @@
 package com.sp.friend_management.model;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -26,12 +27,27 @@ public class UserAccount {
 	}
 	
     public void addFriend(Friend friend) {
-        friends.add(friend);
-        friend.setUserAccount(this);
+    	boolean exist = false;
+    	for (Friend ifriend : friends) {
+    		if (ifriend.getFriendId().equalsIgnoreCase(friend.getFriendId())) {
+    			exist = true;
+    			break;
+    		}
+    	}
+    	
+    	if (!exist) {
+            friends.add(friend);
+            friend.setUserAccount(this);    		
+    	}
     }
  
     public void removeFriend(Friend friend) {
-        friends.remove(friend);
-        friend.setUserAccount(null);
+    	Iterator<Friend> iterator = friends.iterator();
+    	while (iterator.hasNext()) {
+    		Friend ifriend = iterator.next();
+    		if (ifriend.getFriendId().equalsIgnoreCase(friend.getFriendId())) {
+    			iterator.remove();
+    		}
+    	}
     }
 }
